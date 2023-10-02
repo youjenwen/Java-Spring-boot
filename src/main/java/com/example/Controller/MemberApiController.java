@@ -13,7 +13,6 @@ public class MemberApiController {
     MemberAccount memberAccount;
 
     @GetMapping("/memberApi/memberTest")
-    //TODO: 失敗~
     public MemberAccount memberTest() {
         MemberAccount memberAccount = new MemberAccount();
         memberAccount.setAddress("台北市");
