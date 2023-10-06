@@ -1,9 +1,7 @@
 package com.example.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.Model.MemberAccount;
 
@@ -21,5 +19,25 @@ public class MemberApiController {
         memberAccount.setId(1);
         memberAccount.setPassword("12345");
         return memberAccount;
+    }
+
+    //POST 方式
+    @RequestMapping("/api/member")
+    public MemberAccount member(@RequestBody MemberAccount memberAccount){
+        System.out.println(memberAccount.getId());
+        System.out.println(memberAccount.getEmail());
+        return memberAccount;
+    }
+
+    //header
+    @RequestMapping("/api/header")
+    public String header(@RequestHeader String info){
+        return info;
+    }
+
+    //path variable
+    @RequestMapping("/api/member/{memberId}")
+    public String member(@PathVariable String memberId){
+        return memberId;
     }
 }
