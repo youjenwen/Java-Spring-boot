@@ -58,15 +58,15 @@ public class FindItemController {
         return findItem;
     }
 
-    public static List<String> kmpSearch(String text, String str) {
+    public static List<String> kmpSearch(String text, String pattern) {
 
         //計算 next
         List<Integer> next = new ArrayList<>(List.of(0));
         int prefix_len = 0;
         int i = 1;
 
-        while (i < str.length()) {
-            if (str.charAt(prefix_len) == str.charAt(i)) {
+        while (i < pattern.length()) {
+            if (pattern.charAt(prefix_len) == pattern.charAt(i)) {
                 prefix_len += 1;
                 next.add(prefix_len);
                 i += 1;
@@ -84,16 +84,16 @@ public class FindItemController {
         //----------
         //匹配
         int textIndex = 0;
-        int strIndex = 0;
+        int patternIndex = 0;
         int record = 0;
         String nextStr = "";
         String same = "";
         List<String> currentSame = new ArrayList<>();
         List<String> sameList = new ArrayList<>();
         while (textIndex < text.length()) {
-            if (str.charAt(strIndex) == text.charAt(textIndex)) {
-//                System.out.println("record: " + record + " strIndex: " + strIndex + ", str " + str.charAt(strIndex) + ", text " + textIndex + ", " + text.charAt(textIndex));
-                if (strIndex == 0) {
+            if (pattern.charAt(patternIndex) == text.charAt(textIndex)) {
+//                System.out.println("record: " + record + " strIndex: " + strIndex + ", pattern " + pattern.charAt(strIndex) + ", text " + textIndex + ", " + text.charAt(textIndex));
+                if (patternIndex == 0) {
                     currentSame.clear();
                 }
                 String textStr = String.valueOf(text.charAt(textIndex));
@@ -102,7 +102,7 @@ public class FindItemController {
                 }
 
                 nextStr = String.valueOf(text.charAt(textIndex + 1)); //紀錄 當前字符index+1
-                String prefStr = String.valueOf(text.charAt(textIndex - str.length())); //往前找 往後是逗號往前找pattern的長度
+                String prefStr = String.valueOf(text.charAt(textIndex - pattern.length())); //往前找 往後是逗號往前找pattern的長度
                 if (!nextStr.equals(",")) {
                     currentSame.add(nextStr);
                 } else {
@@ -112,31 +112,31 @@ public class FindItemController {
                     currentSame.add(0, prefStr);
                 }
 
-                if (record != strIndex && strIndex != 0) {
+                if (record != patternIndex && patternIndex != 0) {
                     int j = 0;
-                    while (j < strIndex) {
+                    while (j < patternIndex) {
                         currentSame.remove(0);
                         j++;
                     }
                 }
-                strIndex++;
+                patternIndex++;
                 textIndex++;
-                record = strIndex;
+                record = patternIndex;
 
             } else {
-                if (strIndex != 0) {
-                    strIndex = next.get(strIndex - 1);
+                if (patternIndex != 0) {
+                    patternIndex = next.get(patternIndex - 1);
                 } else {
                     textIndex++;
                 }
             }
             //如果strIndex不歸0 會停在找到第一個符合子字串的位置
-            if (textIndex < text.length() && strIndex == str.length()) {
+            if (textIndex < text.length() && patternIndex == pattern.length()) {
                 same = String.join("", currentSame);
                 //TODO: 再比對一次 (感覺不行 跑太多次)
 //                kmpSearch(text, same);
                 sameList.add(same);
-                strIndex = 0;
+                patternIndex = 0;
             }
         }
 //        System.out.println(currentSame);
