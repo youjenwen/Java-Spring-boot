@@ -2,6 +2,8 @@ package com.example.demo;
 
 import com.example.Model.Store;
 import com.example.Model.Student;
+import me.paulschwarz.springdotenv.DotenvPropertySource;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,7 +13,8 @@ import java.util.List;
 @RestController
 public class SpringBootHelloWorld {
     public static void main(String[] args) {
-
+        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
+        DotenvPropertySource.addToEnvironment(applicationContext.getEnvironment());
     }
 
     @RequestMapping("/")

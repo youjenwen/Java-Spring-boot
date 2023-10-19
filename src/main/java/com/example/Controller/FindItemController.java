@@ -1,6 +1,7 @@
 package com.example.Controller;
 
 import com.example.Model.FindItem;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,18 +14,18 @@ import java.util.*;
 @RestController
 @RequestMapping("/api")
 public class FindItemController {
-    private static final String FILENAME = "C:\\Users\\jouven.liao\\Desktop\\Harper.wen\\java\\items.txt";
+    @Value("${FILEPATH}")
+    String FILEPATH;
 
     //用 get 方式取得欲搜尋詞組
     @GetMapping("/findItem")
     public FindItem getFindItem(@RequestParam(value = "name") String itemName) {
         FindItem findItem = new FindItem(); //帶入findItem module
-
         //讀取文件
         BufferedReader reader;
         List<String> conformProducts = new ArrayList<>();
         try {
-            reader = new BufferedReader(new FileReader(FILENAME));
+            reader = new BufferedReader(new FileReader(FILEPATH));
             String line;
             StringBuilder longStr = new StringBuilder();
 
@@ -106,7 +107,7 @@ public class FindItemController {
 
             } else {
                 if (patternIndex != 0) {
-                    if(!String.valueOf(currentSameWorld.get(patternIndex)).equals(String.valueOf(pattern.charAt(patternIndex)))){
+                    if (!String.valueOf(currentSameWorld.get(patternIndex)).equals(String.valueOf(pattern.charAt(patternIndex)))) {
                         textIndex++;
                     }
 
