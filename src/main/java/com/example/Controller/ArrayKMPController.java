@@ -10,26 +10,26 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api")
-public class FindItemController {
+public class ArrayKMPController {
     @Value("${FILEPATH}")
     String FILEPATH;
 
-    //用 get 方式取得欲搜尋詞組
-    @GetMapping("/findItem")
-    public FindItem getFindItem(@RequestParam(value = "name") String itemName) {
+    @GetMapping("/arraykmp")
+    public FindItem getArrayKmp(@RequestParam(value = "name") String itemName) {
         FindItem findItem = new FindItem(); //帶入findItem module
         //讀取文件
-        BufferedReader reader;
+        String line;
         StringBuilder longStr = new StringBuilder();
         List<String> conformProducts = new ArrayList<>();
+        List<String> strArray = new ArrayList<>();
         try {
-            reader = new BufferedReader(new FileReader(FILEPATH));
-            String line;
-
+            BufferedReader reader = new BufferedReader(new FileReader(FILEPATH));
 
             //每行文字去掉空格，然後串成 長字串
             while ((line = reader.readLine()) != null) { //每行進行
@@ -37,20 +37,30 @@ public class FindItemController {
                 longStr.append(str);
             }
 
+            //字串切成陣列
+            strArray = List.of(longStr.toString().split(","));
+
             reader.close();
         } catch (Exception e) {
             System.out.println("Error");
         }
-        //進入比對
-        conformProducts = kmpSearch(String.valueOf(longStr), itemName);
 
+        //利用陣列進行比對
+        int i = 0;
+        while (i < strArray.size()) {
+            if (!Objects.equals(kmpSearch(strArray.get(i), itemName), "")){
+                conformProducts.add(kmpSearch(strArray.get(i), itemName));
+            }
+
+            i++;
+        }
 
         findItem.setCount(conformProducts.size());
         findItem.setItemList(conformProducts);
         return findItem;
     }
 
-    public static List<String> kmpSearch(String text, String pattern) {
+    public static String kmpSearch(String text, String pattern) {
 
         //計算 next
         List<Integer> next = new ArrayList<>(List.of(0));
@@ -75,57 +85,27 @@ public class FindItemController {
         //匹配
         int textIndex = 0;
         int patternIndex = 0;
+        String findIt = "";
 
-        List<String> currentSameWorld = new ArrayList<>();
-        List<String> samePatternList = new ArrayList<>();
         while (textIndex < text.length()) {
-            int x = textIndex;
-            int y = textIndex - 1;
             if (pattern.charAt(patternIndex) == text.charAt(textIndex)) {
-                //pattern index 跑完歸零後回來要將存起來比對用的陣列清空
-                if (patternIndex == 0) {
-                    currentSameWorld.clear();
-
-                    //往後
-                    while (x < text.length()) {
-                        if (String.valueOf(text.charAt(x)).equals(",")) {
-                            break;
-                        }
-                        currentSameWorld.add(String.valueOf(text.charAt(x)));
-                        x++;
-                    }
-
-                    //往前
-                    while (y >= 0) {
-                        if (String.valueOf(text.charAt(y)).equals(",")) {
-                            break;
-                        }
-                        currentSameWorld.add(0, String.valueOf(text.charAt(y)));
-                        y--;
-                    }
-                }
                 patternIndex++;
                 textIndex++;
 
             } else {
                 if (patternIndex != 0) {
-                    if (!String.valueOf(currentSameWorld.get(patternIndex)).equals(String.valueOf(pattern.charAt(patternIndex)))) {
-                        textIndex++;
-                    }
-
                     patternIndex = next.get(patternIndex - 1);
                 } else {
                     textIndex++;
                 }
             }
-            //如果patternIndex不歸0 會停在找到第一個符合子字串的位置
-            //patternIndex 有跑到最後才會進來這裡
-            if (textIndex < text.length() && patternIndex == pattern.length()) {
-                String same = String.join("", currentSameWorld);
-                samePatternList.add(same);
+
+            if (patternIndex == pattern.length()) {
+                findIt = text;
                 patternIndex = 0;
             }
         }
-        return samePatternList;
+        return findIt;
     }
 }
+
