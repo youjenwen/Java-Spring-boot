@@ -3,7 +3,6 @@ package com.example.Service.Hamaya;
 import com.example.Model.Hamaya.Brand;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BrandService {
     List<Brand> fetchBrandList();

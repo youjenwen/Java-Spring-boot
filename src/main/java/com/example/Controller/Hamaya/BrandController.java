@@ -1,16 +1,18 @@
 package com.example.Controller.Hamaya;
 
 import com.example.Model.Hamaya.Brand;
+import com.example.Repo.Hamaya.BrandRepo;
 import com.example.Service.Hamaya.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/hamaya")
 public class BrandController {
+    @Autowired
+    private BrandRepo brandRepo;
     @Autowired
     private BrandService brandService;
 
@@ -26,17 +28,21 @@ public class BrandController {
 
     @PostMapping("/brand")
     public Brand saveNewBrand(@RequestBody Brand brand) {
-        return brandService.saveNewBrand(brand);
-
+        List<Brand> searchBrand = brandRepo.findByName(brand.getName());
+        if(searchBrand.isEmpty()){
+            return brandService.saveNewBrand(brand);
+        }else {
+            return searchBrand.get(0);
+        }
     }
 
     @PutMapping("/brand/{id}")
-    public Brand updateBrand(@PathVariable("id") Long id, @RequestBody Brand brand){
+    public Brand updateBrand(@PathVariable("id") Long id, @RequestBody Brand brand) {
         return brandService.updateBrandById(id, brand);
     }
 
     @DeleteMapping("/brand/{id}")
-    public String deleteBrand(@PathVariable("id") Long id){
+    public String deleteBrand(@PathVariable("id") Long id) {
         return brandService.deleteBrandById(id);
     }
 

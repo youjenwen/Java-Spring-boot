@@ -13,15 +13,18 @@ public class Brand {
     private int id;
     private String name;
 
+    // 無參數的建構子
     public Brand() {
 
     }
 
+    // 帶參數的建構子，用於初始化所有欄位的值
     public Brand(int id, String name) {
         this.id = id;
         this.name = name;
     }
 
+    // 帶參數的建構子，用於初始化除主鍵外的欄位的值
     public Brand(String name) {
         this.name = name;
     }
