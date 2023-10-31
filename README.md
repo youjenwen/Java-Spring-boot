@@ -32,7 +32,19 @@ http://localhost:8080/api/arraykmp?name= (使用 KMP 做成陣列解法)
 http://localhost:8080/api/planets/all
 
 ### 操作 MySQL
-* 目前只有 `GET/brand` 功能
+* 包含了 CRUD 等功能
 
 #### API
-http://localhost:8080/api/hamaya/brand
+* `GET: /api/hamaya/brand` http://localhost:8080/api/hamaya/brand
+* `GET: /api/hamaya/brand/{id}` http://localhost:8080/api/hamaya/brand/25
+* `POST: /api/hamaya/brand` http://localhost:8080/api/hamaya/brand
+  * Body > json  
+    `{
+    "name":"<品牌名稱>"
+    }`
+* `PUT: /api/hamaya/brand/{id}` http://localhost:8080/api/hamaya/brand/25
+  * Body > json  
+      `{
+      "name":"<品牌名稱>"
+      }`
+* `DELETE: /api/hamaya/brand/{id}` http://localhost:8080/api/hamaya/brand/25
