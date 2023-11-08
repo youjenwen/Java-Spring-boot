@@ -5,5 +5,5 @@ import com.example.Model.Planets;
 import java.util.List;
 
 public interface PlanetsService {
-    public List<Planets> getPlanets();
+    List<Planets> getPlanets();
 }
