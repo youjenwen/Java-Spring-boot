@@ -5,9 +5,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.io.Serializable;
+
 @Entity
-//這裡當作 入口 class 就該與資料表同名
-public class Brand {
+public class Brand implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
